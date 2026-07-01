@@ -41,4 +41,17 @@ test('@SP Place the order', async ({page}) => {
 
 //-------------------------------------this is clean up version---------------------------------------------
 
-//Import necessary modules from the Playwright testing library
+const {test, expect, request} = require ('@playwright/test'); //Import necessary modules from the Playwright testing library
+const {APiUtils } = require('../utils/APiUtils'); //Import your custom API helper from the utilities folder
+
+const loginPayLoad = {userEmail:"ajique.QA@protonmail.com",userPassword:"Testing123!"}; //Define a constant object for the authentication request payload (Login credential)
+const orderPayLoad = { orders: [{ country: "India", productOrderedId: "67a8dde5c0d3e6622a297cc8" }] }; //Define constant object for the order creation request payload (Product & Shipping details)
+const fakePayLoadOrders = {data: [], message: "No order"}; //Define a fake/mock payload that simulates an empty orders list from the backend databases
+
+let apiResponse; //Declare a global variable to store the API response details (token and orderID) across hooks
+
+//Setup pre-conditions that run exactly once before any test block in this file executes
+test.beforeAll(async () => {
+    const apiContext = await request.newContext(); //Create an isolated, browserless network environment context specifically for API request
+    const apiUtils = new APiUtils(apiContext, loginPayLoad); //Create new instance of your API utility class, passing the network context and login
+} )

@@ -55,7 +55,7 @@ test.beforeAll(async () => {
     apiResponse = await apiUtils.createOrder(orderPayLoad); //Store order details
 });
 
-test ('@API Place the order and verify history', async ({ page}) => {
+test ('@API Place the order and verify history', async ({page}) => {
     //3. Secure LOGIN bypass (Injected Token)
     //We inject the token into LocalStorage so the website thinks we are already logged in
     await page.addInitScript(value => {

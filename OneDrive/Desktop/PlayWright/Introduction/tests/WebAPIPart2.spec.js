@@ -55,4 +55,21 @@ test.beforeAll(async () => {
     const apiContext = await request.newContext(); //Create an isolated, browserless network environment context specifically for API request
     const apiUtils = new APiUtils(apiContext, loginPayLoad); //Create new instance of your API utility class, passing the network context and loging
     apiResponse = await apiUtils.createOrder(orderPayLoad); // Execute the createOrder method to log in and generate an order, storing results in our global variable
-} )
+} );
+
+//Define the test block with a custom tag focus string and grab the visual browser 'page' object
+test ('@SP Place the order and mock empty state', async ({page}) => {   
+    await page.addInitScript(value => {
+        window.localStorage.setItem('token', value); //Manually inject the authentication token into the browser tab's hidden LocalStorage cache
+    }, apiResponse.token); //Pass the secure token retrieved from the beforeAll API step into the script
+});
+
+//Interceptor rules: Set up network listener to watch for specific backend API request 
+//The '*' character acts as a wildcard because the user's customer ID at the end of the URL changes dynamically
+await page.route("https://rahulshettyacademy.com/api/ecom/order/get-orders-for-customer/*", async route => {
+    const response = await page.request.fetch(route.request()); //Playwright lets the real request go to server and captures the live response  metadata (status code, headers)
+    let body = JSON.stringify(fakePayLoadOrders);
+
+    //Fulfill the route by overriding the server response block with our own customize 
+
+});

@@ -53,5 +53,6 @@ let apiResponse; //Declare a global variable to store the API response details (
 //Setup pre-conditions that run exactly once before any test block in this file executes
 test.beforeAll(async () => {
     const apiContext = await request.newContext(); //Create an isolated, browserless network environment context specifically for API request
-    const apiUtils = new APiUtils(apiContext, loginPayLoad); //Create new instance of your API utility class, passing the network context and login
+    const apiUtils = new APiUtils(apiContext, loginPayLoad); //Create new instance of your API utility class, passing the network context and loging
+    apiResponse = await apiUtils.createOrder(orderPayLoad); // Execute the createOrder method to log in and generate an order, storing results in our global variable
 } )

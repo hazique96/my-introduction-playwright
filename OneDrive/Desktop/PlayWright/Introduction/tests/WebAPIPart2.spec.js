@@ -71,5 +71,30 @@ await page.route("https://rahulshettyacademy.com/api/ecom/order/get-orders-for-c
     let body = JSON.stringify(fakePayLoadOrders);
 
     //Fulfill the route by overriding the server response block with our own customize 
-
+    await route.fulfill({
+        response, //Maintain original backend properties like HTTP Status 200 OK
+        body,   //Replace the real list of orders with our empty strings data: []
+    });
 });
+
+//Navigate directly to the client dashboard appliaction page (the initScript bypasses the login portal screen)
+await page.goto("https://rahulshettyacademy.com/client");
+
+//Locate  the Order History navigation button using its routerlink attribute selector and execute a click action
+await page.locator("button[routerlink*='myorders']").click();
+
+//Explicitly pause the code and wait until the browser captures a network event matching our mocked API route url
+const interceptedResponse = await page.waitForResponse("https://rahulshettyacademy.com/api/ecom/order/get-orders-for-customer/*");
+
+//Print out the JSON data that was actually processed by the browser to confirm our mock data took effect
+console.log("Intercepted Response Body Data: ", await interceptedResponse.json());
+
+//Extracted the visual text message rendered on the UI screen layout container (should print "You have no Order")
+const uiMessage = await page.locator(".mt-4").textContent;
+
+//Print the scraped UI text into the terminal console log output screen for verification review 
+console.log("UI Rendered text message: ", uiMessage);
+
+//Assert that the user interface text matches or contains the empty orders notice warning
+await expect(page.locator(".mt-4").toContainText("You have no orders"));
+

@@ -62,7 +62,7 @@ test ('@SP Place the order and mock empty state', async ({page}) => {
     await page.addInitScript(value => {
         window.localStorage.setItem('token', value); //Manually inject the authentication token into the browser tab's hidden LocalStorage cache
     }, apiResponse.token); //Pass the secure token retrieved from the beforeAll API step into the script
-});
+
 
 //Interceptor rules: Set up network listener to watch for specific backend API request 
 //The '*' character acts as a wildcard because the user's customer ID at the end of the URL changes dynamically
@@ -98,3 +98,4 @@ console.log("UI Rendered text message: ", uiMessage);
 //Assert that the user interface text matches or contains the empty orders notice warning
 await expect(page.locator(".mt-4").toContainText("You have no orders"));
 
+});
